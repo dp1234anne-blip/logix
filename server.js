@@ -9,9 +9,7 @@ const ai = new GoogleGenAI();
 
 app.post('/api/generate', async (req, res) => {
   try {
-    const userPrompt = req.body.prompt || 
-                       req.body.contents?.[0]?.parts?.[0]?.text || 
-                       "Hello";
+    const userPrompt = req.body.prompt || req.body.contents?.[0]?.parts?.[0]?.text || "Hello";
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -28,8 +26,8 @@ app.post('/api/generate', async (req, res) => {
   }
 });
 
-// CRITICAL FOR RENDER: Use process.env.PORT so Render can detect the open port
+// CRITICAL FOR RENDER: Bind to '0.0.0.0' and use process.env.PORT
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
