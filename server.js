@@ -1,30 +1,37 @@
 const express = require('express');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 
 const app = express();
 app.use(express.json());
 
-// Initialize Gemini API (uses GEMINI_API_KEY from environment variables)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-app.get('/', (req, res) => {
-  res.send('Logix Web Service is running successfully!');
-});
+// Initialize the Gemini client (it will automatically pick up process.env.GEMINI_API_KEY)
+const ai = new GoogleGenAI();
 
 app.post('/api/generate', async (req, res) => {
   try {
-    const { prompt } = req.body;
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    res.json({ output: response.text() });
+    // Support both simple prompt format and nested Google SDK format
+    const userPrompt = req.body.prompt || 
+                       req.body.contents?.[0]?.parts?.[0]?.text || 
+                       "Hello";
+
+    // Call the Gemini model (using gemini-2.5-flash or your preferred model)
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: userPrompt,
+    });
+
+    // Send back the generated text response
+    res.json({
+      success: true,
+      result: response.text
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    console.error("Error generating content:", error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
