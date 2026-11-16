@@ -1,13 +1,5 @@
-{
-  "name": "logix",
-  "version": "1.0.0",
-  "description": "Logix backend server",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "@google/genai": "^0.1.1",
-    "express": "^4.18.2"
-  }
-}
+// CRITICAL FOR RENDER: Bind to '0.0.0.0' and use process.env.PORT
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
