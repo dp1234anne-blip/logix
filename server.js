@@ -4,8 +4,13 @@ const { GoogleGenAI } = require('@google/genai');
 const app = express();
 app.use(express.json());
 
-// Initialize the Gemini client (picks up process.env.GEMINI_API_KEY automatically)
+// Initialize the Gemini client (uses GEMINI_API_KEY from Render Environment)
 const ai = new GoogleGenAI();
+
+// Health check route so Render and browsers get an immediate response
+app.get('/', (req, res) => {
+  res.send('Logix server is running!');
+});
 
 app.post('/api/generate', async (req, res) => {
   try {
@@ -26,7 +31,7 @@ app.post('/api/generate', async (req, res) => {
   }
 });
 
-// CRITICAL FOR RENDER: Bind to '0.0.0.0' and use process.env.PORT
+// Bind to '0.0.0.0' and process.env.PORT for Render
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
