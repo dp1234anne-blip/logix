@@ -1,12 +1,13 @@
 {
   "name": "logix",
   "version": "1.0.0",
+  "description": "Logix backend server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "@google/generative-ai": "^0.1.3"
+    "@google/genai": "^0.1.1",
+    "express": "^4.18.2"
   }
 }
